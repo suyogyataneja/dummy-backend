@@ -1,8 +1,9 @@
 Architecture:
 
- User → CloudFront → S3 (React)
+ #1 User → CloudFront → S3 (React)
+
                   ↘
-            API Gateway → Lambda (Express API) → Database
             
-  Order: Rebuild and re-upload the frontend after deploying
-  the backend so it has the real API URL.
+ #2           API Gateway → Lambda (Express API) → Database
+            
+#1 =====> #2
