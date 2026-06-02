@@ -1,0 +1,41 @@
+service: dummy-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-4
+  environment:
+    POSTS_TABLE: ${self:service}-posts
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Scan
+            - dynamodb:PutItem
+          Resource:
+            - !GetAtt PostsTable.Arn
+
+functions:
+  api:
+    handler: handler.handler
+    events:
+      - httpApi: '*'
+
+resources:
+  Resources:
+    PostsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-posts
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+package:
+  exclude:
+    - node_modules/.cache/**

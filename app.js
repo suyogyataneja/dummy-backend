@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { getStoredPosts, storePosts } = require('./data/posts');
-
+// const { getStoredPosts, storePosts } = require('./data/posts');
+const { getStoredPosts, storePost } = require('./data/posts');
 const app = express();
 
 app.use(bodyParser.json());
@@ -28,16 +28,31 @@ app.get('/posts/:id', async (req, res) => {
   res.json({ post });
 });
 
+// app.post('/posts', async (req, res) => {
+//   const existingPosts = await getStoredPosts();
+//   const postData = req.body;
+//   const newPost = {
+//     ...postData,
+//     id: Math.random().toString(),
+//   };
+//   const updatedPosts = [newPost, ...existingPosts];
+//   // await storePosts(updatedPosts);
+//   await storePost(newPost);
+//   res.status(201).json({ message: 'Stored new post.', post: newPost });
+// });
 app.post('/posts', async (req, res) => {
-  const existingPosts = await getStoredPosts();
-  const postData = req.body;
-  const newPost = {
-    ...postData,
-    id: Math.random().toString(),
-  };
-  const updatedPosts = [newPost, ...existingPosts];
-  await storePosts(updatedPosts);
-  res.status(201).json({ message: 'Stored new post.', post: newPost });
-});
+    const postData = req.body;
+    const newPost = {
+      ...postData,
+      id: Math.random().toString(),
+    };
+    await storePost(newPost);
+    res.status(201).json({ message: 'Stored new post.', post: newPost });
+  });
 
-app.listen(8080);
+//app.listen(8080);
+
+if (!process.env.LAMBDA_TASK_ROOT) {
+    app.listen(8080);
+  }
+  module.exports = app;
