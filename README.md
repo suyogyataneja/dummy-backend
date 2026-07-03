@@ -6,4 +6,3 @@ Architecture:
             
  #2           API Gateway → Lambda (Express API) → Database
             
-#1 =====> #2
